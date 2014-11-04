@@ -90,6 +90,10 @@ brew update
 fancy_echo "Installing vim from Homebrew to get the latest version ..."
   brew_install_or_upgrade 'vim'
 
+fancy_echo "Installing pjson to get json parsing ..."
+  brew_install_or_upgrade 'python'
+  pip install pjson --upgrade
+
 fancy_echo "Installing ImageMagick, to crop and resize images ..."
   brew_install_or_upgrade 'imagemagick'
 
@@ -150,6 +154,9 @@ fancy_echo "Installing Bundler to install project-specific Ruby gems ..."
 fancy_echo "Configuring Bundler for faster, parallel gem installation ..."
   number_of_cores=$(sysctl -n hw.ncpu)
   bundle config --global jobs $((number_of_cores - 1))
+
+fancy_echo "Installing CocoaPods to manage library dependencies for your Xcode projects ..."
+  gem install cocoapods
 
 if ! command -v rcup >/dev/null; then
   fancy_echo "Installing rcm, to manage your dotfiles ..."
