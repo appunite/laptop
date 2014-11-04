@@ -166,6 +166,9 @@ else
   fancy_echo "rcm already installed. Skipping ..."
 fi
 
+fancy_echo "Installing liftoff CLI for creating and configuring new Xcode projects ..."
+  brew_install_or_upgrade 'liftoff'
+
 fancy_echo "Installing your personal additions from ~/.laptop.local ..."
   if [[ -f ~/.laptop.local ]]; then
     source ~/.laptop.local
