@@ -1,7 +1,7 @@
 Laptop
 ======
 
-Laptop is a script to set up an OS X laptop for Rails development.
+Laptop is a script to set up an OS X laptop for iOS development.
 
 Requirements
 ------------
@@ -19,7 +19,7 @@ Install
 
 Read, then run the script:
 
-    bash <(curl -s https://raw.githubusercontent.com/thoughtbot/laptop/master/mac) 2>&1 | tee ~/laptop.log
+    bash <(curl -s https://raw.githubusercontent.com/appunite/laptop/master/mac) 2>&1 | tee ~/laptop.log
 
 Debugging
 ---------
@@ -27,7 +27,7 @@ Debugging
 Your last Laptop run will be saved to `~/laptop.log`. Read through it to see if
 you can debug the issue yourself. If not, copy the lines where the script
 failed into a [new GitHub
-Issue](https://github.com/thoughtbot/laptop/issues/new) for us. Or, attach the
+Issue](https://github.com/appunite/laptop/issues/new) for us. Or, attach the
 whole log file as an attachment.
 
 What it sets up
@@ -104,16 +104,6 @@ Put your customizations in `~/.laptop.local`. For example, your
 You should write your customizations such that they can be run safely more than
 once. See the `mac` script for examples.
 
-Credits
--------
-
-![thoughtbot](http://thoughtbot.com/assets/tm/logo.png)
-
-Laptop is maintained and funded by [thoughtbot, inc](http://thoughtbot.com/community).
-The names and logos for thoughtbot are trademarks of thoughtbot, inc.
-
-Thank you, [contributors](https://github.com/thoughtbot/laptop/graphs/contributors)!
-
 Contributing
 ------------
 
@@ -122,5 +112,5 @@ Edit the `mac` file.
 License
 -------
 
-Laptop is © 2011-2014 thoughtbot, inc. It is free software, and may be
+Laptop is © 2011-2014 AppUnite.com, inc. It is free software, and may be
 redistributed under the terms specified in the LICENSE file.
