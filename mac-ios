@@ -4,8 +4,14 @@
 # Be prepared to turn your laptop (or desktop, no haters here)
 # into an awesome development machine.
 
-fancy_echo() {
-  printf "\n%b\n" "$1"
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+BLUE="\033[0;34m"
+RESETCOLOR="\033[0m" 
+
+fancy_echo_yellow() {
+  echo -e "${YELLOW}$1${RESETCOLOR}"
 }
 
 append_to_zshrc() {
@@ -42,7 +48,7 @@ fi
 append_to_zshrc 'export PATH="$HOME/.bin:$PATH"'
 
 if [[ "$SHELL" != */zsh ]]; then
-  fancy_echo "Changing your shell to zsh ..."
+  fancy_echo_yellow "Changing your shell to zsh ..."
     chsh -s $(which zsh)
 fi
 
@@ -74,37 +80,37 @@ brew_expand_alias() {
 }
 
 if ! command -v brew >/dev/null; then
-  fancy_echo "Installing Homebrew, a good OS X package manager ..."
+  fancy_echo_yellow "Installing Homebrew, a good OS X package manager ..."
     ruby <(curl -fsS https://raw.githubusercontent.com/Homebrew/install/master/install)
 
     append_to_zshrc '# recommended by brew doctor'
     append_to_zshrc 'export PATH="/usr/local/bin:$PATH"' 1
     export PATH="/usr/local/bin:$PATH"
 else
-  fancy_echo "Homebrew already installed. Skipping ..."
+  fancy_echo_yellow "Homebrew already installed. Skipping ..."
 fi
 
-fancy_echo "Updating Homebrew formulas ..."
+fancy_echo_yellow "Updating Homebrew formulas ..."
 brew update
 
-fancy_echo "Installing vim from Homebrew to get the latest version ..."
+fancy_echo_yellow "Installing vim from Homebrew to get the latest version ..."
   brew_install_or_upgrade 'vim'
 
-fancy_echo "Installing pjson to get json parsing ..."
+fancy_echo_yellow "Installing pjson to get json parsing ..."
   brew_install_or_upgrade 'python'
   pip install pjson --upgrade
 
-fancy_echo "Installing ImageMagick, to crop and resize images ..."
+fancy_echo_yellow "Installing ImageMagick, to crop and resize images ..."
   brew_install_or_upgrade 'imagemagick'
 
-fancy_echo "Installing watch, to execute a program periodically and show the output ..."
+fancy_echo_yellow "Installing watch, to execute a program periodically and show the output ..."
   brew_install_or_upgrade 'watch'
 
-fancy_echo "Installing GitHub CLI client ..."
+fancy_echo_yellow "Installing GitHub CLI client ..."
   brew_install_or_upgrade 'gh'
 
 if [[ ! -d "$HOME/.rbenv" ]]; then
-  fancy_echo "Installing rbenv, to change Ruby versions ..."
+  fancy_echo_yellow "Installing rbenv, to change Ruby versions ..."
     git clone https://github.com/sstephenson/rbenv.git "$HOME/.rbenv"
 
     append_to_zshrc 'export PATH="$HOME/.rbenv/bin:$PATH"'
@@ -117,59 +123,85 @@ fi
 rehash_path="$HOME/.rbenv/plugins/rbenv-gem-rehash"
 
 if [[ ! -d "$rehash_path" ]]; then
-  fancy_echo "Installing rbenv-gem-rehash so the shell automatically picks up binaries after installing gems with binaries..."
+  fancy_echo_yellow "Installing rbenv-gem-rehash so the shell automatically picks up binaries after installing gems with binaries..."
     git clone https://github.com/sstephenson/rbenv-gem-rehash.git "$rehash_path"
 fi
 
 ruby_build_path="$HOME/.rbenv/plugins/ruby-build"
 
 if [[ -d "$ruby_build_path" ]]; then
-  fancy_echo "Updating to latest ruby-build..."
+  fancy_echo_yellow "Updating to latest ruby-build..."
   cd "$ruby_build_path" && git pull && cd -
 else
-  fancy_echo "Installing ruby-build..."
+  fancy_echo_yellow "Installing ruby-build..."
   git clone https://github.com/sstephenson/ruby-build.git "$ruby_build_path"
 fi
 
-fancy_echo "Upgrading and linking OpenSSL ..."
+fancy_echo_yellow "Upgrading and linking OpenSSL ..."
   brew_install_or_upgrade 'openssl'
   brew unlink openssl && brew link openssl --force
 
 ruby_version="$(curl -sSL http://ruby.thoughtbot.com/latest)"
 
-fancy_echo "Installing Ruby $ruby_version ..."
+fancy_echo_yellow "Installing Ruby $ruby_version ..."
   rbenv install -s "$ruby_version"
 
-fancy_echo "Setting $ruby_version as global default Ruby ..."
+fancy_echo_yellow "Setting $ruby_version as global default Ruby ..."
   rbenv global "$ruby_version"
   rbenv local "$ruby_version"
   rbenv rehash
 
-fancy_echo "Updating to latest Rubygems version ..."
+fancy_echo_yellow "Updating to latest Rubygems version ..."
   gem update --system
 
-fancy_echo "Installing Bundler to install project-specific Ruby gems ..."
+fancy_echo_yellow "Installing Bundler to install project-specific Ruby gems ..."
   gem install bundler --no-document
 
-fancy_echo "Configuring Bundler for faster, parallel gem installation ..."
+fancy_echo_yellow "Configuring Bundler for faster, parallel gem installation ..."
   number_of_cores=$(sysctl -n hw.ncpu)
   bundle config --global jobs $((number_of_cores - 1))
 
-fancy_echo "Installing CocoaPods to manage library dependencies for your Xcode projects ..."
+fancy_echo_yellow "Installing CocoaPods to manage library dependencies for your Xcode projects ..."
   gem install cocoapods
 
 if ! command -v rcup >/dev/null; then
-  fancy_echo "Installing rcm, to manage your dotfiles ..."
+  fancy_echo_yellow "Installing rcm, to manage your dotfiles ..."
     brew tap thoughtbot/formulae
     brew_install_or_upgrade 'rcm'
 else
-  fancy_echo "rcm already installed. Skipping ..."
+  fancy_echo_yellow "rcm already installed. Skipping ..."
 fi
 
-fancy_echo "Installing liftoff CLI for creating and configuring new Xcode projects ..."
+fancy_echo_yellow "Installing liftoff CLI for creating and configuring new Xcode projects ..."
   brew_install_or_upgrade 'liftoff'
 
-fancy_echo "Installing your personal additions from ~/.laptop.local ..."
+conditional_cask_install() {
+  read -n1 -r -p "Would you like to install $1 [y/n]" key
+  echo ""
+
+  if [[ $key = 'y' || $key = 'Y' ]]; then
+    brew cask install "$1"
+  fi
+}
+
+fancy_echo_yellow "Installing homebrew cask"
+brew tap phinze/cask
+brew install brew-cask
+
+fancy_echo_yellow "Installing basic applications"
+conditional_cask_install 'google-chrome'
+conditional_cask_install 'spotify'
+conditional_cask_install 'dropbox'
+conditional_cask_install 'vlc'
+conditional_cask_install 'slack'
+conditional_cask_install 'crashlytics'
+conditional_cask_install 'sublime-text'
+conditional_cask_install 'cyberduck'
+conditional_cask_install 'sequel-pro'
+conditional_cask_install 'skype'
+conditional_cask_install 'the-unarchiver'
+
+fancy_echo_yellow "Installing your personal additions from ~/.laptop.local ..."
   if [[ -f ~/.laptop.local ]]; then
     source ~/.laptop.local
   fi
