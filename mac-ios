@@ -200,6 +200,10 @@ conditional_cask_install 'cyberduck'
 conditional_cask_install 'sequel-pro'
 conditional_cask_install 'skype'
 conditional_cask_install 'the-unarchiver'
+conditional_cask_install 'cloud app'
+
+# others
+defaults write com.apple.iphonesimulator ConnectHardwareKeyboard false
 
 fancy_echo_yellow "Installing your personal additions from ~/.laptop.local ..."
   if [[ -f ~/.laptop.local ]]; then
